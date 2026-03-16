@@ -1,7 +1,7 @@
 <div align="center">
   <img src="docs/Icon.svg" alt="Steel Logo" width="120" />
   <h1>Steel</h1>
-  <p><strong>A blazingly fast, local-first infinite canvas workspace built with Rust & React.</strong></p>
+  <p><strong>A blazingly fast, local-first infinite canvas workspace.</strong></p>
 </div>
 
 ---
