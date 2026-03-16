@@ -1,0 +1,113 @@
+# Steel Architecture Concept: The Local-First Multiplayer Swarm
+
+## Core Philosophy
+This document outlines the architectural roadmap for transforming Steel into a collaborative, real-time multiplayer application **without sacrificing its local-first, privacy-centric nature**. We reject centralized cloud storage (like Google Drive or Figma's servers) in favor of a Peer-to-Peer (P2P) WebRTC Swarm powered by Conflict-Free Replicated Data Types (CRDTs).
+
+The `.steel` file acts as both the local database and the cryptographic "Swarm Key" that discovers and connects collaborators dynamically through the internet.
+
+---
+
+## 1. The Technology Stack
+
+To achieve serverless, lag-free collaboration, we must decouple our state from a monolithic JSON object into a distributed log of deltas.
+
+### Frontend Dependencies (React & State)
+- **`yjs`**: The core CRDT engine. Replaces standard state arrays. It guarantees that if Alice and Bob both edit the same node completely offline, the graph will mathematically resolve without conflicts when they reconnect.
+- **`zustand-yjs`** (or custom binder): Adapts our current Zustand [GraphState](file:///j:/Dev/Projects/Steel/src/store/useStore.ts#13-44) so React components re-render seamlessly when `yjs` receives network deltas.
+- **`y-webrtc`**: The networking provider for Yjs. It handles the terrifying complexity of NAT traversal, STUN/TURN queries, and meshes multiple browsers together using pure WebRTC `DataChannels`.
+
+### Backend Dependencies (Rust / Tauri)
+Our Rust backend takes a step back from networking in this phase. The P2P mesh happens entirely in the frontend Chromium/V8 engine (WebView2/WKWebView) because `y-webrtc` leverages native browser C++ WebRTC implementations.
+- **File System**: Rust remains strictly responsible for flushing the compressed `yjs` binary state (the `.steel` file) to the local SSD whenever the user hits `/save`.
+
+---
+
+## 2. The `.steel` File Paradigm Shift
+
+Historically, `.steel` files are raw JSON dumps (`nodes: [], edges: []`).
+In the Swarm architecture, a `.steel` file will be a hybrid container:
+
+```json
+{
+  "version": "1.2",
+  "swarm_key": "steel-mesh-72ax9-...", // (Optional) The WebRTC Room ID
+  "yjs_binary": "<base64 encoded Uint8Array of the Y.Doc state>"
+}
+```
+
+### The "Swarm Key" Mechanics
+1. **P2P Discovery**: If a `.steel` file is opened and contains a `swarm_key`, `y-webrtc` automatically shouts to a public signaling network (a simple WebSocket Tracker): *"Who else is in room `steel-mesh-72ax9`?"*
+2. **The Mesh**: If the PM in Madrid and a Developer in Tokyo open the same `.steel` file, the Tracker negotiates their IPs. A direct P2P tunnel opens. They synchronize their `yjs_binary` histories in milliseconds.
+3. **Ghost Mode**: If you are the only one awake, the Tracker finds nobody. You work completely local-first. When colleagues open the file tomorrow, they fetch your latest offline changes instantly.
+
+---
+
+## 3. Workflow Scenarios & Edge Cases
+
+### Setup ($ The Genesis)
+The PM creates a fresh diagram. It is currently local and has no `swarm_key`.
+- They type `/weld start`.
+- Steel generates a secure UUID, saves it as the `swarm_key`, and initiates the host protocol.
+- **Visual Feedback:** A special read-only node (e.g., `Node type: weld-key`) is automatically spawned at `[0,0]` on the Canvas. It displays the connection key so it's always visually clear that the file is online and what the sharing code is. This node cannot be deleted, only copied.
+- The PM sends the `.steel` file to the team (via Slack, Email, or standard git).
+
+### Joining ($ The Arrival)
+A developer downloads the file and drags it into Steel.
+- Steel detects the `swarm_key`. It automatically connects to the swarm.
+- If the developer's `.steel` file is 3 days old, but the PM is currently online, the developer's screen will instantly "fast-forward" as the PM's computer sends the missing 3 days of node movements via WebRTC.
+
+### Ejecting ($ The Ghost Fork)
+A developer gets angry or wants to test a destructive idea without ruining the master project.
+- They type `/weld cut` (or `/weld break`).
+- Steel strips the `swarm_key` from memory and overwrites the local `.steel` file.
+- The WebRTC connection drops.
+- **Visual Feedback:** The special `weld-key` node instantly vanishes from the Canvas, confirming the file is completely offline and hyper-local again.
+- The developer is now in a disconnected "fork" of the project. Their edits will never reach the team.
+- To return, they must type `/weld join [original_swarm_key]`. `yjs` will mathematically merge their rogue edits with whatever the team built in the meantime.
+
+---
+
+## 4. Handling Version Discrepancies (The Upgrade Problem)
+
+**The Risk:** Alice runs Steel v1.0 (Nodes only have `name`). Bob runs Steel v2.0 (Nodes now have `tags` and `color`). How does the P2P swarm handle this if they connect?
+
+**The Yjs CRDT Solution:**
+CRDTs are schema-less maps.
+- Bob (v2.0) adds a `color: 'red'` property to Node 1.
+- This delta travels to Alice (v1.0).
+- Alice's `yjs` engine **will store** `color: 'red'` in her memory, even though her React UI code doesn't know what to do with it (it ignores it).
+- If Alice edits Node 1's `name` and saves her `.steel` file, **she will not corrupt Bob's data**. When Bob opens Alice's file, `color: 'red'` is still there perfectly intact.
+
+**Future-Proofing Rule:** We must ensure our Zustand layer never aggressively prunes "unknown" properties from the raw Y.Map objects. The CRDT must be treated as the ultimate source of truth, acting as a flexible document store.
+
+---
+
+## 5. Security & Infrastructure Summary
+
+1. **Signaling Servers**: We need a "Tracker". We can use the default public servers provided by `y-webrtc` (e.g., `wss://signaling.yjs.dev`), or spin up a $5/month Node.js WebSocket server solely for matching Steel peers. This server **never** sees or stores user graph data; it only brokers IP addresses.
+2. **STUN/TURN**: Crucial for strict corporate firewalls (NAT traversal). We will default to public Google STUN servers. If P2P fails, the user remains offline until we offer a premium TURN relay service (or they configure their own via the CLI).
+3. **E2E Encryption**: `y-webrtc` passwords/room keys can be combined with standard web crypto algorithms so that even the Tracker only sees hashed room names.
+
+---
+
+## 6. Threat Model & Security Validations
+
+Since we are building a trustless P2P mesh, we must assume the network (and the Tracker server) is hostile.
+
+### Attack Vector 1: The Eavesdropping Tracker (Man-in-the-Middle)
+**Threat:** The signaling WebSocket server (Tracker) intercepts the `swarm_key` to discover projects and wiretap the WebRTC coordinates.
+**Mitigation:** `y-webrtc` only sends a SHA-256 hash of the `swarm_key` to the Tracker to find peers. The actual key never leaves the client. WebRTC Data Channels enforce DTLS (Datagram Transport Layer Security) by exchanging ECDSA certificates. The Tracker physically cannot decrypt the node payloads.
+
+### Attack Vector 2: The Rogue Peer (Data Poisoning)
+**Threat:** A disgruntled employee (or someone who guessed the `swarm_key`) writes a script connecting to the WebRTC swarm and blasts millions of garbage nodes to crash everyone's canvas or corrupt the CRDT history forever.
+**Mitigation:**
+1. **Frontend Input Sanitization:** Our Zustand wrapper MUST validate every incoming Y.Map delta before reacting. If a peer sends a node with `x: "NaN"` or a string exceeding 50,000 chars, the delta is ignored.
+2. **The Undo Ledger:** `yjs` supports an integrated `UndoManager`. If a rogue peer griefs the canvas, any honest peer can press `Ctrl+Z` to revert the entire malicious chunk of CRDT updates in one go.
+3. **Key Rotation (`/weld cut`):** Since there is no central server to "ban" users, the PM simply hits `/weld cut` (ejecting the project offline), reverting the griefing, and spawns a brand new key with `/weld start` to share only with trusted peers.
+
+### Attack Vector 3: RCE via Payload Execution
+**Threat:** A peer injects a malicious payload into a node (e.g., an HTML `<script>`) that executes arbitrary code when rendered on another teammate’s Tauri frontend.
+**Mitigation:**
+1. **CSP (Content Security Policy):** The Webview rendering the React Canvas must enforce extremely strict CSPs, forbidding `unsafe-inline` scripts.
+2. **Sanitize-HTML:** Nodes like Markdown viewers or Web iframes must strictly strip scripts, `javascript:` hrefs, and dangerous DOM attributes before the React renderer interprets them.
+3. **No Tauri AST Execution:** The powerful Rust commands like `/term` or the Native PTY Terminal **cannot** be triggered across the network. Local actions must remain strictly local. Only visual properties (X/Y coordinates, text content, color) are replicated across the CRDT mesh.

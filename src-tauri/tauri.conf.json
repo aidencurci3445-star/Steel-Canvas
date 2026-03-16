@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Steel",
+  "version": "0.1.3",
+  "identifier": "com.blue1.tauri-app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Steel",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "**"
+        ]
+      },
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' wss://steelserver.onrender.com wss://*.onrender.com https://steel-1100.metered.live https://*.expressturn.com turn:free.expressturn.com stun:stun.l.google.com stun:stun1.l.google.com ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost https://asset.localhost blob: data:; font-src 'self' data:; frame-src 'self' asset: http://asset.localhost https://asset.localhost; media-src 'self' asset: http://asset.localhost https://asset.localhost; object-src 'self' asset: http://asset.localhost https://asset.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDBEMkYyNUFENDY4MDY0QzMKUldURFpJQkdyU1V2RFgyOEF2c1JtOHptSEFERGlwR3RzZm45S3NBelBBT2NTTmorWmxzNE1mdDYK",
+      "endpoints": [
+        "https://example.com/update.json"
+      ]
+    }
+  }
+}
