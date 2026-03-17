@@ -1,6 +1,6 @@
 <div align="center">
   <img src="docs/Icon.svg" alt="Steel Logo" width="120" />
-  <h1>Steel</h1>
+  <h1>Steel Canvas</h1>
   <p><strong>A blazingly fast, local-first infinite canvas workspace.</strong></p>
 </div>
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-Steel is an evolution of the traditional note-taking and coding workspace. It provides an infinite zooming canvas where you can freely organize notes, code snippets, local media, web pages, and even deep-scan your local OS directories to visualize dependencies.
+Steel Canvas is an evolution of the traditional note-taking and coding workspace. It provides an infinite zooming canvas where you can freely organize notes, code snippets, local media, web pages, and even deep-scan your local OS directories to visualize dependencies.
 
 Built on Tauri v2, Steel runs entirely offline, leveraging native OS capabilities to securely manipulate your files directly from the canvas.
 
@@ -72,8 +72,8 @@ steel/
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/JaumeLloretRubio/Steel.git
-   cd steel
+   git clone https://github.com/JaumeLloretRubio/Steel-Canvas.git
+   cd steel-canvas
    ```
 2. Install frontend dependencies:
 
